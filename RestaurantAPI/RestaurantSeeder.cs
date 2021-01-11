@@ -63,7 +63,7 @@ namespace RestaurantAPI
                 },
                 new Restaurant()
                 {
-                    Name = "McDonald",
+                    Name = "McDonald Szewska",
                     Category = "Fast Food",
                     Description =
                         "McDonald's Corporation (McDonald's), incorporated on December 21, 1964, operates and franchises McDonald's restaurants.",
