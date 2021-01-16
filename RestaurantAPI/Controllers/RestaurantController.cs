@@ -23,7 +23,7 @@ namespace RestaurantAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute] int id)
+        public ActionResult Delete([FromRoute] int id)
         {
             var isDeleted = _restaurantService.Delete(id);
 
