@@ -53,7 +53,6 @@ namespace RestaurantAPI.Services
 
         public bool Delete(int id)
         {
-            _logger.LogWarning($"Delete Restaurant with id {id} invoked");
             var restaurant = _dbContext
                 .Restaurants
                 .FirstOrDefault(r => r.Id == id);
