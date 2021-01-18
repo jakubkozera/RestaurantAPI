@@ -70,11 +70,14 @@ namespace RestaurantAPI.Services
 
         public RestaurantDto GetById(int id)
         {
+
             var restaurant = _dbContext
                 .Restaurants
                 .Include(r => r.Address)
                 .Include(r => r.Dishes)
                 .FirstOrDefault(r => r.Id == id);
+
+        
 
             if (restaurant is null) return null;
 
