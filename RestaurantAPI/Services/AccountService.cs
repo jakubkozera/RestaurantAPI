@@ -17,7 +17,7 @@ namespace RestaurantAPI.Services
     {
         private readonly RestaurantDbContext _context;
 
-        public AccountService(RestaurantDbContext context, IPasswordHasher<User> hasher)
+        public AccountService(RestaurantDbContext context)
         {
             _context = context;
         }
