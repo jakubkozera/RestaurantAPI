@@ -16,6 +16,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RestaurantAPI.Authorization;
 using RestaurantAPI.Entities;
@@ -71,7 +72,7 @@ namespace RestaurantAPI
             services.AddScoped<IAuthorizationHandler, MinimumAgeRequirementHandler>();
             services.AddScoped<IAuthorizationHandler, ResourceOperationRequirementHandler>();
             services.AddControllers().AddFluentValidation();
-            services.AddDbContext<RestaurantDbContext>();
+            
             services.AddScoped<RestaurantSeeder>();
             services.AddAutoMapper(this.GetType().Assembly);
             services.AddScoped<IRestaurantService, RestaurantService>();
@@ -95,6 +96,10 @@ namespace RestaurantAPI
                     
                     );
             });
+
+            services.AddDbContext<RestaurantDbContext>
+                (options => options.UseSqlServer(Configuration.GetConnectionString("RestaurantDbConnection")));
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,6 +115,7 @@ namespace RestaurantAPI
             }
 
             app.UseMiddleware<ErrorHandlingMiddleware>();
+
             app.UseMiddleware<RequestTimeMiddleware>();
             app.UseAuthentication();
             app.UseHttpsRedirection();
