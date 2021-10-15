@@ -7,6 +7,9 @@ using Xunit;
 using Microsoft.AspNetCore.Mvc.Testing;
 using FluentAssertions;
 using System.Net.Http;
+using Microsoft.EntityFrameworkCore;
+using RestaurantAPI.Entities;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace RestaurantAPI.IntegrationTests
 {
@@ -16,7 +19,22 @@ namespace RestaurantAPI.IntegrationTests
 
         public RestaurantControllerTests(WebApplicationFactory<Startup> factory)
         {
-            _client = factory.CreateClient();
+            _client = factory
+                .WithWebHostBuilder(builder =>
+                {
+                    builder.ConfigureServices(services =>
+                    {
+                        var dbContextOptions = services
+                            .SingleOrDefault(service => service.ServiceType == typeof(DbContextOptions<RestaurantDbContext>));
+
+                        services.Remove(dbContextOptions);
+
+                        services
+                         .AddDbContext<RestaurantDbContext>(options => options.UseInMemoryDatabase("RestaurantDb"));
+
+                    });
+                })
+                .CreateClient();
         }
 
         [Theory]
