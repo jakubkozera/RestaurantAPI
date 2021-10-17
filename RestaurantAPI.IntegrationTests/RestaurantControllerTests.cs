@@ -10,6 +10,9 @@ using System.Net.Http;
 using Microsoft.EntityFrameworkCore;
 using RestaurantAPI.Entities;
 using Microsoft.Extensions.DependencyInjection;
+using RestaurantAPI.Models;
+using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization.Policy;
 
 namespace RestaurantAPI.IntegrationTests
 {
@@ -29,12 +32,42 @@ namespace RestaurantAPI.IntegrationTests
 
                         services.Remove(dbContextOptions);
 
+                        services.AddSingleton<IPolicyEvaluator, FakePolicyEvaluator>();
+
+                        services.AddMvc(option => option.Filters.Add(new FakeUserFilter()));
+
+
                         services
                          .AddDbContext<RestaurantDbContext>(options => options.UseInMemoryDatabase("RestaurantDb"));
 
                     });
                 })
                 .CreateClient();
+        }
+
+
+        [Fact]
+        public async Task CreateRestaurant_WithValidModel_ReturnsCreatedStatus()
+        {
+            // arrange
+            var model = new CreateRestaurantDto()
+            {
+                Name = "TestRestaurant",
+                City = "Kraków",
+                Street = "Długa 5"
+            };
+
+            var json = JsonConvert.SerializeObject(model);
+
+            var httpContent = new StringContent(json, UnicodeEncoding.UTF8, "application/json");
+
+            // act
+            var response = await _client.PostAsync("/api/restaurant", httpContent);
+
+            // arrange 
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
+            response.Headers.Location.Should().NotBeNull();
         }
 
         [Theory]
@@ -58,8 +91,6 @@ namespace RestaurantAPI.IntegrationTests
         [InlineData("")]
         public async Task GetAll_WithInvalidQueryParams_ReturnsBadRequest(string queryParams)
         {
-
-
             // act
 
             var response = await _client.GetAsync("/api/restaurant?" + queryParams);
