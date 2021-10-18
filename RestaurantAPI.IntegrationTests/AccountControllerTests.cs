@@ -12,12 +12,15 @@ using Microsoft.Extensions.DependencyInjection;
 using RestaurantAPI.Models;
 using RestaurantAPI.IntegrationTests.Helpers;
 using FluentAssertions;
+using RestaurantAPI.Services;
+using Moq;
 
 namespace RestaurantAPI.IntegrationTests
 {
     public class AccountControllerTests : IClassFixture<WebApplicationFactory<Startup>>
     {
         private HttpClient _client;
+        private Mock<IAccountService> _accountServiceMock = new Mock<IAccountService>();
 
         public AccountControllerTests(WebApplicationFactory<Startup> factory)
         {
@@ -31,12 +34,41 @@ namespace RestaurantAPI.IntegrationTests
 
                           services.Remove(dbContextOptions);
 
+                          services.AddSingleton<IAccountService>(_accountServiceMock.Object);
+
+
                           services
                            .AddDbContext<RestaurantDbContext>(options => options.UseInMemoryDatabase("RestaurantDb"));
 
                       });
                   })
                 .CreateClient();
+        }
+
+        [Fact]
+        public async Task Login_ForRegisteredUser_ReturnsOk()
+        {
+            // arrange
+
+            _accountServiceMock
+                .Setup(e => e.GenerateJwt(It.IsAny<LoginDto>()))
+                .Returns("jwt");
+
+            var loginDto = new LoginDto()
+            {
+                Email = "test@test.com",
+                Password = "password123"
+            };
+
+            var httpContent = loginDto.ToJsonHttpContent();
+
+            // act
+
+            var response = await _client.PostAsync("/api/account/login", httpContent);
+
+            // assert
+
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
         }
 
         [Fact]
