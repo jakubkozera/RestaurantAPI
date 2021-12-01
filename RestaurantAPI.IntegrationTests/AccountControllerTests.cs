@@ -68,7 +68,7 @@ namespace RestaurantAPI.IntegrationTests
 
             // assert
 
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.BadRequest);
         }
 
         [Fact]
