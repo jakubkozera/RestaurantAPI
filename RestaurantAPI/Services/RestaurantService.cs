@@ -79,7 +79,7 @@ namespace RestaurantAPI.Services
 
         public void Delete(int id)
         {
-            _logger.LogError($"Restaurant with id: {id} DELETE action invoked");
+            _logger.LogWarning($"Restaurant with id: {id} DELETE action invoked");
 
             var restaurant = _dbContext
                 .Restaurants
@@ -119,12 +119,18 @@ namespace RestaurantAPI.Services
             return result;
         }
 
-        public PagedResult<RestaurantDto> GetAll(RestaurantQuery query)
+        public IEnumerable<RestaurantDto> GetAllForUser(int userId)
         {
-            var baseQuery = _dbContext
+            var result = _dbContext
                 .Restaurants
                 .Include(r => r.Address)
                 .Include(r => r.Dishes)
+                .Where(r => r.UserId == userId)
+                .ToList();
+
+            return result 
+
+
                 .Where(r => query.SearchPhrase == null || (r.Name.ToLower().Contains(query.SearchPhrase.ToLower())
                                                            || r.Description.ToLower()
                                                                .Contains(query.SearchPhrase.ToLower())));
