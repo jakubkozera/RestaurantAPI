@@ -119,18 +119,12 @@ namespace RestaurantAPI.Services
             return result;
         }
 
-        public IEnumerable<RestaurantDto> GetAllForUser(int userId)
+        public PagedResult<RestaurantDto> GetAll(RestaurantQuery query)
         {
-            var result = _dbContext
+            var baseQuery = _dbContext
                 .Restaurants
                 .Include(r => r.Address)
                 .Include(r => r.Dishes)
-                .Where(r => r.UserId == userId)
-                .ToList();
-
-            return result 
-
-
                 .Where(r => query.SearchPhrase == null || (r.Name.ToLower().Contains(query.SearchPhrase.ToLower())
                                                            || r.Description.ToLower()
                                                                .Contains(query.SearchPhrase.ToLower())));
