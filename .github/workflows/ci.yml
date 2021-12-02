@@ -1,0 +1,27 @@
+name: CI
+on:
+  push:
+    branches: [ master-pipeline ]
+  pull_request:
+    branches:
+      - master-pipeline
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v1.9.0 
+        with:
+          dotnet-version: 5.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Test
+        run: dotnet test
+        
+        
+
