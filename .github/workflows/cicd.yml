@@ -27,7 +27,7 @@ jobs:
           name: api-artifact
           path: ${{env.DOTNET_ROOT}}/api
         
-  deploy:
+  deploy-dev:
     runs-on: ubuntu-latest
     needs: build
     environment:
@@ -45,4 +45,21 @@ jobs:
         with:
           app-name: 'restaurantapi-dev'
           publish-profile: ${{ secrets.PUBLISH_PROFILE_DEV }}
+  deploy-prod:
+    runs-on: ubuntu-latest
+    needs: deploy-dev
+    environment:
+      name: 'Prod'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: api-artifact
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'restaurantapi-prod'
+          publish-profile: ${{ secrets.PUBLISH_PROFILE_PROD }}
