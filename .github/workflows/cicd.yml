@@ -1,6 +1,6 @@
 name: CI-CD
 on:
-  pull_request:
+  push:
     branches:
       - master-pipeline-test
 
