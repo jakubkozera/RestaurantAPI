@@ -43,5 +43,6 @@ jobs:
         with:
           app-name: 'restaurantapi-dev'
           publish-profile: ${{ secrets.PUBLISH_PROFILE_DEV }}
+          package: .
 
 
