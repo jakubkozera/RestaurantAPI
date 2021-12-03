@@ -24,7 +24,6 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
-          name: api-artifact
           path: ${{env.DOTNET_ROOT}}/api
         
   deploy:
@@ -37,8 +36,6 @@ jobs:
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
-        with:
-          name: api-artifact
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
