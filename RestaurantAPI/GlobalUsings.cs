@@ -1,0 +1,16 @@
+﻿global using AutoMapper;
+global using FluentValidation.AspNetCore;
+global using Microsoft.AspNetCore.Authorization;
+global using Microsoft.IdentityModel.Tokens;
+global using RestaurantAPI;
+global using RestaurantAPI.Authorization;
+global using RestaurantAPI.Entities;
+global using RestaurantAPI.Middleware;
+global using RestaurantAPI.Services;
+global using System.Reflection;
+global using System.Text;
+global using FluentValidation;
+global using Microsoft.AspNetCore.Identity;
+global using Microsoft.EntityFrameworkCore;
+global using RestaurantAPI.Models;
+global using RestaurantAPI.Models.Validators;

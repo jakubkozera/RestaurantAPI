@@ -1,0 +1,7 @@
+@baseUrl = https://localhost:44343
+
+GET {{baseUrl}}/throw
+
+###
+
+GET {{baseUrl}}/throwNotFound
