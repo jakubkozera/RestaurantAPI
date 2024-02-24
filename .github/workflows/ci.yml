@@ -18,8 +18,8 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --no-restore
-      - name: Test
-        run: dotnet test
-        
+    - name: Test
+      run: dotnet test
+      
         
 
